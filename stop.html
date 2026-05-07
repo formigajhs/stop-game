@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stop Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0b0b12;
+      --bg2: #141422;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-2: rgba(255, 255, 255, 0.09);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f5f5f7;
+      --muted: #b8b8c7;
+      --red: #ff3d5a;
+      --red-2: #ff6a7f;
+      --pink: #ff4fd8;
+      --purple: #7f5cff;
+      --yellow: #ffd95c;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 79, 216, 0.15), transparent 28%),
+        radial-gradient(circle at top right, rgba(127, 92, 255, 0.18), transparent 30%),
+        linear-gradient(135deg, #08080d 0%, #11111b 50%, #0a0a11 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      letter-spacing: 1px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--red), var(--pink), var(--purple), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 18px rgba(255, 61, 90, 0.15);
+    }
+
+    .sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .topo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, var(--red), var(--pink));
+      box-shadow: 0 8px 20px rgba(255, 61, 90, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(255, 61, 90, 0.4);
+      opacity: 0.96;
+    }
+
+    .tabela-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1320px;
+      border-collapse: separate;
+      border-spacing: 8px;
+    }
+
+    th {
+      background: linear-gradient(135deg, rgba(255, 61, 90, 0.18), rgba(127, 92, 255, 0.15));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 10px;
+      border-radius: 14px;
+      font-size: 14px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .campo-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
+      transition: 0.2s ease;
+    }
+
+    .campo-box:hover {
+      background: var(--card-2);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .resposta {
+      width: 100%;
+      min-width: 120px;
+      border: 1px solid transparent;
+      outline: none;
+      padding: 12px 10px;
+      border-radius: 12px;
+      background: #191926;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    .resposta:focus {
+      border-color: var(--pink);
+      background: #202031;
+      box-shadow: 0 0 0 4px rgba(255, 79, 216, 0.12);
+    }
+
+    .linha-pontos .campo-box {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .label-pontos {
+      font-size: 12px;
+      color: #d7d7e3;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .ponto {
+      width: 78px;
+      border: 1px solid transparent;
+      outline: none;
+      padding: 10px 8px;
+      border-radius: 12px;
+      background: #1f1f2d;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .ponto:focus {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 4px rgba(255, 217, 92, 0.12);
+    }
+
+    .col-total {
+      min-width: 130px;
+    }
+
+    .total-area {
+      background: linear-gradient(135deg, var(--red), var(--purple));
+      border-radius: 18px;
+      padding: 14px 10px;
+      color: white;
+      box-shadow: 0 10px 24px rgba(127, 92, 255, 0.22);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .total-label {
+      display: block;
+      font-size: 12px;
+      opacity: 0.95;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .total-box {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .rodada-separador td {
+      padding: 2px 0;
+      border: none;
+      background: transparent;
+      height: 6px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .sub {
+        font-size: 13px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .resposta {
+        min-width: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>STOP GAME</h1>
+      <div class="sub">Preencha rápido, marque os pontos embaixo e veja a soma automática da rodada</div>
+    </div>
+
+    <div class="topo" style="gap: 10px; flex-wrap: wrap;">
+      <div style="text-align: center; margin: 15px 0;">
+  <button onclick="sortearLetra()">Sortear letra</button>
+
+  <div id="letraAtual" style="
+    font-size: 64px;
+    font-weight: 900;
+    color: #ffd95c;
+    margin-top: 10px;
+  ">
+    ?
+  </div>
+</div>
+  <input id="nomeJogador" placeholder="Seu nome" style="padding: 14px; border-radius: 12px; border: none;">
+
+  <input id="codigoSala" placeholder="Código da sala" style="padding: 14px; border-radius: 12px; border: none; text-transform: uppercase;">
+
+  <button onclick="criarSala()">Criar sala</button>
+
+  <button onclick="entrarSala()">Entrar sala</button>
+
+  <button onclick="pararJogo()">STOP</button>
+
+  <button onclick="adicionarRodada()">+ Nova Rodada</button>
+</div>
+
+<div id="statusSala" style="text-align:center; margin-bottom: 16px; color: #ffd95c; font-weight: bold;"></div>
+
+    <div class="tabela-wrap">
+      <table id="tabelaStop">
+        <thead>
+          <tr>
+            <th>Nome</th>
+<th>Animal</th>
+<th>Cor</th>
+<th>Fruta</th>
+<th>Objeto</th>
+<th>Carro</th>
+<th>Profissão</th>
+<th>Minha sogra é</th>
+<th>Meu marido é</th>
+<th>CEP</th>
+<th>Filme / Série / Novela</th>
+<th>Comida</th>
+            <th class="col-total">Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyACVSvwXs8o0yZNYjEEviJryIJ7Op0qiFU",
+  authDomain: "stop-df548.firebaseapp.com",
+  databaseURL: "https://stop-df548-default-rtdb.firebaseio.com",
+  projectId: "stop-df548",
+  storageBucket: "stop-df548.firebasestorage.app",
+  messagingSenderId: "937139384632",
+  appId: "1:937139384632:web:2bfc0bcc511d5afa9811cd",
+  measurementId: "G-36570Z5JS1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+console.log("Firebase conectado!");
+
+const categorias = 12;
+let salaAtual = "";
+
+window.criarSala = function criarSala() {
+  const nome = document.querySelector("#nomeJogador").value.trim() || "Jogador";
+
+  salaAtual = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  document.querySelector("#codigoSala").value = salaAtual;
+  document.querySelector("#statusSala").textContent = "Sala criada: " + salaAtual;
+
+  set(ref(db, "salas/" + salaAtual), {
+  stop: {
+    ativo: false,
+    jogador: "",
+    momento: null
+  },
+  jogadores: {
+    [nome]: true
+  }
+});
+
+  liberarCampos();
+  ouvirSala();
+ouvirLetra();
+};
+
+window.entrarSala = function entrarSala() {
+  const nome = document.querySelector("#nomeJogador").value.trim() || "Jogador";
+
+  salaAtual = document.querySelector("#codigoSala").value.trim().toUpperCase();
+
+  if (!salaAtual) {
+    alert("Digite o código da sala.");
+    return;
+  }
+
+  set(ref(db, "salas/" + salaAtual + "/jogadores/" + nome), true);
+
+  document.querySelector("#statusSala").textContent = "Você entrou na sala: " + salaAtual;
+
+  ouvirSala();
+ouvirLetra();
+};
+
+window.pararJogo = function pararJogo() {
+  if (!salaAtual) {
+    alert("Crie ou entre em uma sala primeiro.");
+    return;
+  }
+
+  const nome = document.querySelector("#nomeJogador").value.trim() || "Jogador";
+
+  set(ref(db, "salas/" + salaAtual + "/stop"), {
+    ativo: true,
+    jogador: nome,
+    momento: Date.now()
+  });
+};
+
+function ouvirSala() {
+  onValue(ref(db, "salas/" + salaAtual + "/stop"), function(snapshot) {
+    const stop = snapshot.val();
+
+    if (stop && stop.ativo === true) {
+      document.querySelector("#statusSala").textContent =
+        "STOP! " + stop.jogador + " terminou primeiro. Agora contem os pontos.";
+
+      alert("STOP! " + stop.jogador + " terminou primeiro.");
+
+      document.querySelectorAll(".resposta").forEach(function(input) {
+        input.disabled = true;
+      });
+    }
+  });
+}
+
+function liberarCampos() {
+  document.querySelectorAll(".resposta").forEach(function(input) {
+    input.disabled = false;
+  });
+}
+
+window.adicionarRodada = function adicionarRodada() {
+  const tbody = document.querySelector("#tabelaStop tbody");
+
+  const linhaRespostas = document.createElement("tr");
+  linhaRespostas.className = "linha-respostas";
+
+  let htmlRespostas = "";
+
+  for (let i = 0; i < categorias; i++) {
+    htmlRespostas += `
+      <td>
+        <div class="campo-box">
+          <input type="text" class="resposta" placeholder="Digite aqui" />
+        </div>
+      </td>
+    `;
+  }
+
+  htmlRespostas += `
+    <td class="col-total" rowspan="2">
+      <div class="total-area">
+        <span class="total-label">Total da rodada</span>
+        <div class="total-box">0</div>
+      </div>
+    </td>
+  `;
+
+  linhaRespostas.innerHTML = htmlRespostas;
+
+  const linhaPontos = document.createElement("tr");
+  linhaPontos.className = "linha-pontos";
+
+  let htmlPontos = "";
+
+  for (let i = 0; i < categorias; i++) {
+    htmlPontos += `
+      <td>
+        <div class="campo-box">
+          <div class="label-pontos">Pontos</div>
+          <input type="number" class="ponto" min="0" placeholder="0" oninput="calcularTotal(this)" />
+        </div>
+      </td>
+    `;
+  }
+
+  linhaPontos.innerHTML = htmlPontos;
+
+  const separador = document.createElement("tr");
+  separador.className = "rodada-separador";
+  separador.innerHTML = `<td colspan="9"></td>`;
+
+  tbody.appendChild(linhaRespostas);
+  tbody.appendChild(linhaPontos);
+  tbody.appendChild(separador);
+};
+
+window.calcularTotal = function calcularTotal(input) {
+  const linhaPontos = input.closest("tr");
+  const linhaRespostas = linhaPontos.previousElementSibling;
+  const pontos = linhaPontos.querySelectorAll(".ponto");
+
+  let soma = 0;
+
+  pontos.forEach(function(campo) {
+    soma += Number(campo.value) || 0;
+  });
+
+  linhaRespostas.querySelector(".total-box").textContent = soma;
+};
+
+window.sortearLetra = function sortearLetra() {
+  if (!salaAtual) {
+    alert("Crie ou entre em uma sala primeiro.");
+    return;
+  }
+
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const letra = letras[Math.floor(Math.random() * letras.length)];
+
+  set(ref(db, "salas/" + salaAtual + "/letra"), letra);
+};
+
+function ouvirLetra() {
+  onValue(ref(db, "salas/" + salaAtual + "/letra"), function(snapshot) {
+    const letra = snapshot.val();
+
+    if (letra) {
+      document.querySelector("#letraAtual").textContent = letra;
+    }
+  });
+}
+</script>
+</body>
+</html>
