@@ -128,10 +128,23 @@
     #statusSala {
       text-align: center;
       min-height: 22px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       color: var(--yellow);
       font-weight: 800;
       font-size: 14px;
+    }
+
+    #placarGeral {
+      width: fit-content;
+      margin: 0 auto 14px;
+      padding: 10px 18px;
+      border-radius: 16px;
+      background: rgba(255, 217, 92, 0.10);
+      border: 1px solid rgba(255, 217, 92, 0.30);
+      color: var(--yellow);
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(255, 217, 92, 0.08);
     }
 
     .tabela-wrap {
@@ -301,6 +314,8 @@
     </div>
 
     <div id="statusSala"></div>
+
+    <div id="placarGeral">Total geral: 0</div>
 
     <div class="tabela-wrap">
       <table id="tabelaStop">
@@ -514,14 +529,28 @@
       const linhaRespostas = linhaPontos.previousElementSibling;
       const pontos = linhaPontos.querySelectorAll(".ponto");
 
-      let soma = 0;
+      let somaRodada = 0;
 
       pontos.forEach(function(campo) {
-        soma += Number(campo.value) || 0;
+        somaRodada += Number(campo.value) || 0;
       });
 
-      linhaRespostas.querySelector(".total-box").textContent = soma;
+      linhaRespostas.querySelector(".total-box").textContent = somaRodada;
+      calcularTotalGeral();
     };
+
+    function calcularTotalGeral() {
+      let totalGeral = 0;
+
+      document.querySelectorAll(".total-box").forEach(function(total) {
+        totalGeral += Number(total.textContent) || 0;
+      });
+
+      const placar = document.querySelector("#placarGeral");
+      if (placar) {
+        placar.textContent = "Total geral: " + totalGeral;
+      }
+    }
 
     window.sortearLetra = function sortearLetra() {
       if (!salaAtual) {
@@ -546,6 +575,7 @@
     }
 
     adicionarRodada();
+    calcularTotalGeral();
   </script>
 </body>
 </html>
